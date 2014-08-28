@@ -7,6 +7,7 @@ module Wishlist
       @authentication = Wishlist::Authentication.new(domain, url)
       raise 'No credentials provided' if !authentication.valid?
       @authentication.agent.conditional_requests = false
+      @authentication.agent.max_history = 0
       @authentication
     end
     
