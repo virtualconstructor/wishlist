@@ -6,6 +6,8 @@ module Wishlist
     def initialize(domain, url)
       @authentication = Wishlist::Authentication.new(domain, url)
       raise 'No credentials provided' if !authentication.valid?
+      @authentication.agent.conditional_requests = false
+      @authentication
     end
     
     def levels
