@@ -28,7 +28,7 @@ module Wishlist
 
     # PUT /members/{member_id}
     def update(member_id, data = {})
-      agent.put path(member_id), data, { 'Content-Length' => data.to_query.length }
+      agent.put path(member_id), data.to_query, { 'Content-Length' => data.to_query.length }
     end
 
     # DELETE /members/{member_id}
