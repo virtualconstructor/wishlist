@@ -8,10 +8,12 @@ module Wishlist
     attr_accessor :lock_key_hash
     attr_accessor :agent
     attr_accessor :authenticated
+    attr_accessor :domain
     
     def initialize(domain, key)
       @url = "http://#{domain}#{Wishlist::API_ENDPOINT}"
       @key = key
+      @domain = domain
       @authenticated = false
       initialize_mechanize
       authenticate
@@ -28,6 +30,11 @@ module Wishlist
       page = agent.get path
       body = Yajl::Parser.parse(page.body)
       raise 'No auth lock to open' if body['success'].to_i != 1 || body['lock'].empty?
+
+      # fix issue with lock not always appearing in the cookie jar
+      cookie = Mechanize::Cookie.new :domain => domain, :name => 'lock', :value => body['lock'], :path => '/'
+      agent.cookie_jar << cookie
+
       prepare_hash body['lock']
     end
     
